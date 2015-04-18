@@ -1,4 +1,3 @@
-var AIversion = version.slice(0,2);
 var doc = activeDocument;
 var docHeight = doc.height;
 var docWidth = doc.width;
@@ -6,21 +5,11 @@ var pathRef;
 var mm = 2.834645;
 var swatchNAME = doc.swatches;
 
-if (AIversion == "10") {
-//------Gray colour Registration 10%-----//
-RegColorBL = new SpotColor();
-RegColorBL.spot = doc.spots["[Registration]"];
-MyGray = new Color();
-RegColorBL.tint = 10;
-MyGray.spot = RegColorBL;
-}
-else {
 //------Gray colour Registration 10%-----//
 try {RegColorBL = swatchNAME["[Registration]"].color;}
 catch (e) {RegColorBL = swatchNAME["[Совмещение]"].color;}
 RegColorBL.tint = 10;
 MyGray = RegColorBL;
-}
 
 //  set up zero   //
 doc.rulerOrigin = [0, 0];
