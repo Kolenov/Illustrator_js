@@ -1,4 +1,3 @@
-var AIversion = version.slice(0, 2);
 var doc = activeDocument;
 var docHeight = doc.height;
 var docWidth = doc.width;
@@ -26,6 +25,7 @@ var RegWhite = RegColorWH;
 //--------------Без цвета------------//
 NoneColorSW = swatchNAME[0].color;
 noColor = NoneColorSW;
+
 
 var MakeSW = 1;
 for (i = 0; i < swatchNAME.length; i++) {
@@ -102,54 +102,32 @@ function Strip() {
 
 function My_text() {
     TextGroup = doc.activeLayer.groupItems.add();
-    if (AIversion == "10") {
-        var textRef = TextGroup.textArtItems.add();
-    } else {
-        var textRef = TextGroup.textFrames.add()
+
+    var textRef = TextGroup.textFrames.add()
+
+    textRef.textRange.characterAttributes.size = 8;
+    textRef.textRange.characterAttributes.stroked = false;
+    textRef.textRange.characterAttributes.wrapInside = true;
+    textRef.textRange.characterAttributes.fillColor = swatchNAME[i].color;
+    try {
+        textRef.textRange.characterAttributes.textFont = app.textFonts["PragmaticaC"];
+    } catch (e) {
+        textRef.textRange.characterAttributes.textFont = app.textFonts["ArialMT"];
     }
-    if (AIversion == "10") {
-        textArtRange = textRef.textRange();
-        textArtRange.contents = swatchNAME[i].name;
-        textArtRange.size = 8;
-        try {
-            textArtRange.font = "PragmaticaC";
-        } catch (e) {
-            textArtRange.font = "ArialMT";
-        }
-        textArtRange.stroked = false;
-        textArtRange.filled = true;
-        textArtRange.fillColor = swatchNAME[i].color;
-    } else {
-        textRef.textRange.characterAttributes.size = 8;
-        textRef.textRange.characterAttributes.stroked = false;
-        textRef.textRange.characterAttributes.wrapInside = true;
-        textRef.textRange.characterAttributes.fillColor = swatchNAME[i].color;
-        try {
-            textRef.textRange.characterAttributes.textFont = app.textFonts["PragmaticaC"];
-        } catch (e) {
-            textRef.textRange.characterAttributes.textFont = app.textFonts["ArialMT"];
-        }
-        textRef.contents = swatchNAME[i].name;
-    }
+    textRef.contents = swatchNAME[i].name;
+
+
     textWidth = textRef.width;
-    textRef.position = Array(start, docHeight + 1.5 - mm);
+    textRef.position = [start, docHeight + 1.5 - mm];
 
     textRef.duplicate();
-    if (AIversion == "10") {
-        textArtRange.stroked = true;
-        textArtRange.strokeWidth = 1;
-        textArtRange.strokeColor = RegWhite;
-    } else {
-        textRef.textRange.characterAttributes.stroked = true;
-        textRef.textRange.characterAttributes.strokeWidth = 1;
-        textRef.textRange.characterAttributes.strokeColor = RegWhite;
-    }
-    textRef.position = Array(start, docHeight + 1.5 - mm);
-    if (AIversion == "10") {
-        start += textWidth + mm / 2;
-    } else {
-        start += textWidth;
-    }
+
+    textRef.textRange.characterAttributes.stroked = true;
+    textRef.textRange.characterAttributes.strokeWidth = 1;
+    textRef.textRange.characterAttributes.strokeColor = RegWhite;
+
+    textRef.position = [start, docHeight + 1.5 - mm];
+    start += textWidth;
 }
 
 function Box() {
@@ -166,7 +144,7 @@ function Box() {
     FillColor.tint = Tint[g];
     box.fillColor = FillColor;
 
-    box.position = Array(Start_Strip, docHeight - mm);
+    box.position = [Start_Strip, docHeight - mm];
     Start_Strip -= mm * 3;
 }
 
@@ -179,7 +157,7 @@ function Spot_add(Name, Tint, Color) {
 }
 
 function DefineCMYK(C, M, Y, K) {
-    newCMYKColor = new CMYKColor();
+    var newCMYKColor = new CMYKColor();
     newCMYKColor.black = K;
     newCMYKColor.cyan = C;
     newCMYKColor.magenta = M;
