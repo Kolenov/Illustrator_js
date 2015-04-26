@@ -68,9 +68,6 @@ if (Check == true) {
     }
 }
 
-/////////////////////////////////////////////////////////
-//                 Блок функций                        //
-/////////////////////////////////////////////////////////
 function Scale() {
     var MakeScaleLayer = 1;
     for (j = doc.layers.length - 1; j >= 0; j--) {
@@ -81,11 +78,11 @@ function Scale() {
             doc.activeLayer = doc.layers["Scale"];
         }
     }
-
+    //  Создаем новый слой для шкал  //
     if (MakeScaleLayer == 1) {
         var newLayer = doc.layers.add();
         newLayer.name = "Scale"
-    } //  Создаем новый слой для шкал  //
+    }
 }
 
 function Strip() {
@@ -103,7 +100,7 @@ function Strip() {
 function My_text() {
     TextGroup = doc.activeLayer.groupItems.add();
 
-    var textRef = TextGroup.textFrames.add()
+    var textRef = TextGroup.textFrames.add();
 
     textRef.textRange.characterAttributes.size = 8;
     textRef.textRange.characterAttributes.stroked = false;

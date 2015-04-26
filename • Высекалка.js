@@ -1,54 +1,49 @@
 var doc = activeDocument;
 //  устанавливаем ноль
 doc.rulerOrigin = [0, 0];
-//  деселект все   //
+//  деселект все
 doc.selection = null;
 var docHeight = doc.height;
 var docWidth = doc.width;
-var docname = activeDocument.name;
+var docName = activeDocument.name;
 var mm = 2.834645;
-var TextRef = doc.textFrames;
-
-// Добавляем надпись с датой и именем документа
-var My_Black = DefineCMYK(0, 0, 0, 100);
-
-The_text = My_text(10, "PragmaticaC", My_Black, "«Арт-Флекс» Днепропетровск  " + docname + " (" + TodayDate() + ")");
-The_text.top = docHeight + 30;
-The_text.left = 0;
-// ширина материала
-The_text = My_text(10, "PragmaticaC", My_Black, "ширина полотна " + Math.round(docHeight / mm) + " mm");
-The_text.position = [-The_text.width / 2 - 20, docHeight / 2 + 3];
-The_text.rotate(90);
-// шаг печати
+var textRef = doc.textFrames;
 var Zub = 3.175;
 var z = Math.floor(docWidth / mm / Zub);
+//  шаг печати
+var step = (docWidth / mm).toPrecision(6);
+var blackColor = DefineCMYK(0, 0, 0, 100);
 
-step = (docWidth / mm).toString();
-Width_okr = step.substr(0, 7); //отрезаем до 7 знака
+//  Дата и имя документа
+var dateDocNameText = SetText(10, "PragmaticaC", blackColor, "«Арт-Флекс» Днепропетровск  " + docName + " (" + TodayDate() + ")");
+dateDocNameText.top = docHeight + 30;
+dateDocNameText.left = 0;
 
-The_text = My_text(10, "PragmaticaC", My_Black, "Z=" + z + " (" + Width_okr + " mm)");
-The_text.position = [docWidth / 2 - The_text.width / 2 + 50, docHeight + 60];
-The_text = My_text(10, "PragmaticaC", My_Black, "--------------->");
-The_text.position = [docWidth / 2 - The_text.width / 2 + 50, docHeight + 45];
+//  Ширина материала
+var materialHeightText = SetText(10, "PragmaticaC", blackColor, "ширина полотна " + Math.round(docHeight / mm) + " mm");
+materialHeightText.position = [-materialHeightText.width / 2 - 20, docHeight / 2 + 3];
+materialHeightText.rotate(90);
 
-Check = confirm("Бумага?");
+// Типа материала
+var materialTipeText = SetText(10, "PragmaticaC", blackColor, "Z=" + z + " (" + step + " mm)");
+materialTipeText.position = [docWidth / 2 - materialTipeText.width / 2 + 50, docHeight + 60];
+materialTipeText = SetText(10, "PragmaticaC", blackColor, "--------------->");
+materialTipeText.position = [docWidth / 2 - materialTipeText.width / 2 + 50, docHeight + 45];
+
+var Check = confirm("Бумага?");
 if (Check == true) {
-    The_text = My_text(10, "PragmaticaC", My_Black, "Самоклеящаяся бумага Raflacoat RP51 HG65");
-    The_text.position = [docWidth / 2 - The_text.width / 2 + 50, docHeight + 30];
-    The_text = My_text(10, "PragmaticaC", My_Black, "Подложка: 54-57mkm");
-    The_text.position = [docWidth / 2 - The_text.width / 2 + 50, docHeight + 20];
+    var paperTypeText = SetText(10, "PragmaticaC", blackColor, "Самоклеящаяся бумага Raflacoat RP51 HG65");
+    paperTypeText.position = [docWidth / 2 - paperTypeText.width / 2 + 50, docHeight + 30];
+    paperTypeText = SetText(10, "PragmaticaC", blackColor, "Подложка: 54-57mkm");
+    paperTypeText.position = [docWidth / 2 - paperTypeText.width / 2 + 50, docHeight + 20];
 }
 else {
-    The_text = My_text(10, "PragmaticaC", My_Black, "Самоклеящаяся пленка PE6850 85mkm");
-    The_text.position = [docWidth / 2 - The_text.width / 2 + 50, docHeight + 30];
-    The_text = My_text(10, "PragmaticaC", My_Black, "Подложка: 54-57mkm");
-    The_text.position = [docWidth / 2 - The_text.width / 2 + 50, docHeight + 20];
+    var filmTypeText = SetText(10, "PragmaticaC", blackColor, "Самоклеящаяся пленка PE6850 85mkm");
+    filmTypeText.position = [docWidth / 2 - filmTypeText.width / 2 + 50, docHeight + 30];
+    filmTypeText = SetText(10, "PragmaticaC", blackColor, "Подложка: 54-57mkm");
+    filmTypeText.position = [docWidth / 2 - filmTypeText.width / 2 + 50, docHeight + 20];
 }
 
-
-/////////////////////////////////////////////////////////
-//                 Блок функций                        //
-/////////////////////////////////////////////////////////
 
 function DefineCMYK(C, M, Y, K) {
     var newCMYKColor = new CMYKColor();
@@ -59,8 +54,8 @@ function DefineCMYK(C, M, Y, K) {
     return newCMYKColor;
 }
 
-function My_text(Size, Font, My_Fill, Contents) {
-    myText = TextRef.add();
+function SetText(Size, Font, My_Fill, Contents) {
+    var myText = textRef.add();
     myText.textRange.characterAttributes.size = Size;
     myText.textRange.characterAttributes.fillColor = My_Fill;
     try {

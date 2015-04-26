@@ -9,14 +9,10 @@ var TextRef = doc.textFrames;
 
     //-------Белый цвет регистрэйшн-----//
     RegColorWH = swatchNAME[1].color;
-    // try {RegColorWH = swatchNAME["[Registration]"].color;}
-    // catch (e) {RegColorWH = swatchNAME["[Совмещение]"].color;}
     RegColorWH.tint = 0;
     var RegWhite = RegColorWH;
     //------Черный цвет регистрэйшн-----//
     RegColorBL = swatchNAME[1].color;
-    // try {RegColorBL = swatchNAME["[Registration]"].color;}
-    // catch (e) {RegColorWH = swatchNAME["[Совмещение]"].color;}
     RegColorBL.tint = 100;
     var MyBlack = RegColorBL;
 
@@ -68,16 +64,16 @@ if (_go == 0) {
 
     My_Line(Height - 5 * mm, 0, Width, Height, noColor, MyBlack, 0.01);
     //Добавляем надпись с датой и именем документа //
-    The_text = My_text(6, "PragmaticaC", MyBlack, "Заказчик | <Наименование работы> | " + docname + " | (" + TodayDate() + " - " + TodayTime() + ") | " + Width_okr + " x " + Height_okr);
-    The_text.position = [mm * 10, docHeight + 10];
+    TheText = My_text(6, "PragmaticaC", MyBlack, "Заказчик | <Наименование работы> | " + docname + " | (" + TodayDate() + " - " + TodayTime() + ") | " + Width_okr + " x " + Height_okr);
+    TheText.position = [mm * 10, docHeight + 10];
     //Ширина материала //
     My_Line(docHeight + 0.2, 0, mm * 20, 0.2, MyBlack, noColor, 0);
     My_Line(0, 0, mm * 20, 0.2, MyBlack, noColor, 0);
     //My_Line (docHeight, 3*mm, 0.2, docHeight/2-50, MyBlack, noColor, 0);
     //My_Line (docHeight/2-50, 3*mm, 0.2, docHeight/2-50, MyBlack, noColor, 0);
-    The_text = My_text(6, "PragmaticaC", MyBlack, "Ширина материала   " + Math.round(docHeight / mm) + " mm");
-    The_text.position = [-textWidth / 2 + 8, docHeight / 2 + 3];
-    The_text.rotate(90);
+    TheText = My_text(6, "PragmaticaC", MyBlack, "Ширина материала   " + Math.round(docHeight / mm) + " mm");
+    TheText.position = [-TheText.width / 2 + 8, docHeight / 2 + 3];
+    TheText.rotate(90);
     //Маркер компенсации//
     My_Line(docHeight + 5 * mm, 9.9 * mm / 2, 0.2, 5 * mm, MyBlack, noColor, 0);
     My_Line(0, 9.9 * mm / 2, 0.2, 5 * mm, MyBlack, noColor, 0);
@@ -120,11 +116,9 @@ if (_go == 0) {
     }
     KompensGroup.position = [8 * mm, docHeight + 10 * mm];
 }
-/////////////////////////////////////////////////////////
-//                 Блок функций                        //
-/////////////////////////////////////////////////////////
+
 function My_Line(Top, Left, Width, Height, My_Fill, My_Stroke, str_Width) {
-    pathRef = doc.pathItems.rectangle(Top, Left, Width, Height);
+    var pathRef = doc.pathItems.rectangle(Top, Left, Width, Height);
     pathRef.filled = true;
     pathRef.fillColor = My_Fill;
     pathRef.stroked = true;
@@ -133,7 +127,7 @@ function My_Line(Top, Left, Width, Height, My_Fill, My_Stroke, str_Width) {
 }
 
 function My_text(Size, Font, My_Fill, Contents) {
-        myText = TextRef.add();
+        var myText = TextRef.add();
         myText.textRange.characterAttributes.size = Size;
         myText.textRange.characterAttributes.fillColor = My_Fill;
         try {

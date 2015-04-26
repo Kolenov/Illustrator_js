@@ -1,11 +1,10 @@
 ﻿var doc = activeDocument;
 var docHeight = doc.height;
 var docWidth = doc.width;
-var msgNosel = "No selected object!";
-
+var msgNoSelected = "No selected object!";
 var docPath = doc.path.fsName;
 var docName = doc.name;
-//alert (docPath.slice(0,3))
+
 if (docPath.slice(0, 3) == "/\w\:\\/") {
     docsep = "";
 }
@@ -15,40 +14,41 @@ else {
 var pathFile = docPath + docsep + docName;
 var textRef = doc.textFrames;
 
-
 if (selection.length == 1) {
 
-    var MyContents = doc.selection[0].contents;
+    var textSourceContent = doc.selection[0].contents;
 
-//разбиваем на блоки строчку    
-//Заказчик | <Наименование работы> | Untitled-3 | (13.07.2006 - 15:10) | 307.100 x 230.000
-    BlokList = MyContents.split(/\s*\|\s*/g);
+/*
+разбиваем на блоки строчку
+Заказчик | <Наименование работы> | Untitled-3 | (13.07.2006 - 15:10) | 307.100 x 230.000
+*/
+    BlocksList = textSourceContent.split(/\s*\|\s*/g);
 // разбиваем на блоки строчку 307.100 x 230.000
-    if (BlokList.length > 4) {
-        Width_Hight = BlokList[4].split(/\s\x\s/);
+    if (BlocksList.length > 4) {
+        Width_Hight = BlocksList[4].split(/\s\x\s/);
     }
 
     TextRefcounter = textRef.length;
-    for (i = TextRefcounter - 1; i >= 0; i--) {
+    for (var i = TextRefcounter - 1; i >= 0; i--) {
         if (textRef[i].editable) {
 
             var obj = textRef[i];
 
             if (obj.contents == "{CLIENT}{NAME}") {
-                obj.contents = BlokList[0] + " " + BlokList[1];
+                obj.contents = BlocksList[0] + " " + BlocksList[1];
             }
             else if (obj.contents == "{CLIENT}") {
-                obj.contents = BlokList[0];
+                obj.contents = BlocksList[0];
             }
             else if (obj.contents == "{NAME}") {
-                obj.contents = BlokList[1];
+                obj.contents = BlocksList[1];
             }
             else if (obj.contents == "{FILE}") {
                 obj.contents = pathFile;
             }
             else if (obj.contents == "{DATE}") {
-                if (BlokList.length > 4) {
-                    obj.contents = BlokList[3];
+                if (BlocksList.length > 4) {
+                    obj.contents = BlocksList[3];
                 }
                 else {
                     obj.contents = TodayDate()
@@ -67,7 +67,7 @@ if (selection.length == 1) {
     doc.selection[0].remove();
 }
 else {
-    alert(msgNosel);
+    alert(msgNoSelected);
 }
 
 //  Определяем дату //

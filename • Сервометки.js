@@ -197,7 +197,7 @@ function Markers(my_Fill) {
 }
 
 function MarkerColor(obj) {
-    var newColor = new SpotColor();
+    newColor = new SpotColor();
     newColor = obj.color;
     return newColor;
 }
