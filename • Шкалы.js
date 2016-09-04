@@ -73,12 +73,11 @@ if (checkConfirm === true) {
 }
 
 function makeScaleLayer() {
-	for (var i = 0 - 1; i < doc.layers.length; i++) {
+	for (var i = 0; i < doc.layers.length; i++) {
 		if (doc.layers[i].name == "Scale") {
 			isMakeScaleLayer = false;
 			doc.activeLayer = doc.layers["Scale"];
-		}
-		break;
+			break;
 	}
 	//  Создаем новый слой для шкал  //
 	if (isMakeScaleLayer === true) {
