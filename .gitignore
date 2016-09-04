@@ -42,3 +42,10 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+# Other stuff
+copy.cmd
+.idea/
+/diff.xml
+/editor.xml
+/baseRefactoring.xml
