@@ -1,4 +1,5 @@
-﻿var doc = activeDocument;
+﻿"use strict";
+var doc = activeDocument;
 var docHeight = doc.height;
 var docWidth = doc.width;
 var msgNoSelected = "No selected object!";
@@ -6,59 +7,60 @@ var docPath = doc.path.fsName;
 var docName = doc.name;
 
 if (docPath.slice(0, 3) == "/\w\:\\/") {
-    docsep = "";
+    var docSeparator = "";
 }
 else {
-    docsep = "\\";
+    docSeparator = "\\";
 }
-var pathFile = docPath + docsep + docName;
+var pathFile = docPath + docSeparator + docName;
 var textRef = doc.textFrames;
 
 if (selection.length == 1) {
 
     var textSourceContent = doc.selection[0].contents;
 
-/*
-разбиваем на блоки строчку
-Заказчик | <Наименование работы> | Untitled-3 | (13.07.2006 - 15:10) | 307.100 x 230.000
-*/
-    BlocksList = textSourceContent.split(/\s*\|\s*/g);
+    /*
+     разбиваем на блоки строчку
+     Заказчик | <Наименование работы> | Untitled-3 | (13.07.2006 - 15:10) | 307.100 x 230.000
+     */
+    var blocksList = textSourceContent.split(/\s*\|\s*/g);
 // разбиваем на блоки строчку 307.100 x 230.000
-    if (BlocksList.length > 4) {
-        Width_Hight = BlocksList[4].split(/\s\x\s/);
+    if (blocksList.length > 4) {
+        var widthHight = blocksList[4].split(/\s\x\s/);
     }
 
-    TextRefcounter = textRef.length;
-    for (var i = TextRefcounter - 1; i >= 0; i--) {
+    // TODO Check if patterns are exist
+    var textRefCounter = textRef.length;
+    for (var i = textRefCounter - 1; i >= 0; i--) {
         if (textRef[i].editable) {
 
             var obj = textRef[i];
 
             if (obj.contents == "{CLIENT}{NAME}") {
-                obj.contents = BlocksList[0] + " " + BlocksList[1];
+                obj.contents = blocksList[0] + " " + blocksList[1];
             }
             else if (obj.contents == "{CLIENT}") {
-                obj.contents = BlocksList[0];
+                obj.contents = blocksList[0];
             }
             else if (obj.contents == "{NAME}") {
-                obj.contents = BlocksList[1];
+                obj.contents = blocksList[1];
             }
             else if (obj.contents == "{FILE}") {
                 obj.contents = pathFile;
             }
             else if (obj.contents == "{DATE}") {
-                if (BlocksList.length > 4) {
-                    obj.contents = BlocksList[3];
+                if (blocksList.length > 4) {
+                    obj.contents = blocksList[3];
                 }
                 else {
-                    obj.contents = TodayDate()
+                    obj.contents = todayDate()
                 }
             }
             else if (obj.contents == "{WIDTH}") {
-                obj.contents = Width_Hight[0];
+                obj.contents = widthHight[0];
             }
             else if (obj.contents == "{HEIGHT}") {
-                obj.contents = Width_Hight[1];
+                obj.contents = widthHight[1];
             }
             else {
             }
@@ -74,7 +76,7 @@ else {
 /**
  * @return {string}
  */
-function TodayDate() {
+function todayDate() {
     var Today = new Date();
     var Day = Today.getDate();
     var Month = Today.getMonth() + 1;
@@ -89,7 +91,7 @@ function TodayDate() {
 /**
  * @return {string}
  */
-function TodayTime() {
+function todayTime() {
     var Today = new Date();
     var Hours = Today.getHours();
     var Minutes = Today.getMinutes();

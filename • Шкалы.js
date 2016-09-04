@@ -78,12 +78,13 @@ function makeScaleLayer() {
 			isMakeScaleLayer = false;
 			doc.activeLayer = doc.layers["Scale"];
 			break;
-	}
-	//  Создаем новый слой для шкал  //
-	if (isMakeScaleLayer === true) {
-		var newLayer = doc.layers.add();
-		newLayer.name = "Scale";
-		isMakeScaleLayer = false;
+		}
+		//  Создаем новый слой для шкал  //
+		if (isMakeScaleLayer === true) {
+			var newLayer = doc.layers.add();
+			newLayer.name = "Scale";
+			isMakeScaleLayer = false;
+		}
 	}
 }
 
