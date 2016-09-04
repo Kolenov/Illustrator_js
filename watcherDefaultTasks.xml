@@ -4,7 +4,7 @@
       <option name="arguments" value="" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" value="" />
-      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="exitCodeBehavior" value="NEVER" />
       <option name="fileExtension" value="js" />
       <option name="immediateSync" value="true" />
       <option name="name" value="copy" />
