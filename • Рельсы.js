@@ -1,61 +1,63 @@
+'use strict';
 var doc = activeDocument;
-// ------- деселект все ------- //
-doc.selection = null;
 var docHeight = doc.height;
 var docWidth = doc.width;
 var mm = 2.834645;
-var railGroup = doc.activeLayer.groupItems.add();
-var swatchNAME = doc.swatches;
+var swatchNames = doc.swatches;
 
+// black color for registration marks
+var regColorBlack = swatchNames[1].color;
+regColorBlack.tint = 100;
+// white color for registration marks
+var regColorWhite = swatchNames[1].color;
+regColorWhite.tint = 0;
+// no color
+var noColor = swatchNames[0].color;
 
-    //------Черный цвет регистрэйшн-----//
-    RegColorBL = swatchNAME[1].color;
-    RegColorBL.tint = 100;
-    var RegBlack = RegColorBL;
-    //-------Белый цвет регистрэйшн-----//
-    RegColorWH = swatchNAME[1].color;
-    RegColorWH.tint = 0;
-    var RegWhite = RegColorWH;
-    //--------------Без цвета------------//
-    NoneColorSW = swatchNAME[0].color;
-    noColor = NoneColorSW;
-
-
-// ------- устанавливаем ноль -------  //
+doc.selection = null;
 doc.rulerOrigin = [0, 0];
 
-// ------- рисуем верхнюю рельсу -------  //
-Line(docHeight - mm, 0, docWidth, mm * 2, RegBlack);
+var railGroup = doc.activeLayer.groupItems.add();
 
-// ------- рисуем центральную метку -------//
-Line(docHeight - mm, docWidth / 2 - mm * 2, mm * 4, mm * 2, RegWhite);
-Line(docHeight - mm * 2 + 0.125, docWidth / 2 - mm * 2, mm * 4, 0.25, RegBlack);
-Line(docHeight - mm, docWidth / 2 - 0.125, 0.25, mm * 2, RegBlack);
+// make rail
+new Box(docHeight - mm, 0, docWidth, 2 * mm);
+// make central mark
+new Box(docHeight - mm, docWidth / 2 - 2 * mm, 4 * mm, 2 * mm, regColorWhite);
+new Box(docHeight - 2 * mm + 0.125, docWidth / 2 - 2 * mm, 4 * mm, 0.25);
+new Box(docHeight - mm, docWidth / 2 - 0.125, 0.25, 2 * mm);
+// make left mark
+new Box(docHeight - 4 * mm + 0.4, 0, 5 * mm, 0.4);
+new Box(docHeight - mm, 5 * mm - 0.4, 0.4, 3 * mm);
+new Box(docHeight, 5 * mm - 0.4, 0.4, mm, regColorWhite);
+new Box(docHeight - 2 * mm, 0, 5 * mm - 0.4, 2 * mm - 0.4, regColorWhite);
+new Box(docHeight - 3 * mm + 0.2, 0, 2 * mm, 0.4);
+// make right mark
+new Box(docHeight - 4 * mm + 0.4, docWidth - 5 * mm, 5 * mm, 0.4);
+new Box(docHeight - mm, docWidth - 5 * mm, 0.4, 3 * mm);
+new Box(docHeight, docWidth - 5 * mm, 0.4, mm, regColorWhite);
+new Box(docHeight - 2 * mm, docWidth - 5 * mm + 0.4, 5 * mm - 0.4, 2 * mm - 0.4, regColorWhite);
+new Box(docHeight - 3 * mm + 0.2, docWidth - 2 * mm, 2 * mm, 0.4);
 
-// ------- рисуем боковые метки ------- //
-Line(docHeight - mm * 4 + 0.4, 0, mm * 5, 0.4, RegBlack);
-Line(docHeight - mm, mm * 5 - 0.4, 0.4, mm * 3, RegBlack);
-Line(docHeight, mm * 5 - 0.4, 0.4, mm, RegWhite);
-Line(docHeight - mm * 2, 0, mm * 5 - 0.4, mm * 2 - 0.4, RegWhite);
-Line(docHeight - mm * 3 + 0.2, 0, mm * 2, 0.4, RegBlack);
-
-Line(docHeight - mm * 4 + 0.4, docWidth - mm * 5, mm * 5, 0.4, RegBlack);
-Line(docHeight - mm, docWidth - mm * 5, 0.4, mm * 3, RegBlack);
-Line(docHeight, docWidth - mm * 5, 0.4, mm, RegWhite);
-Line(docHeight - mm * 2, docWidth - mm * 5 + 0.4, mm * 5 - 0.4, mm * 2 - 0.4, RegWhite);
-Line(docHeight - mm * 3 + 0.2, docWidth - mm * 2, mm * 2, 0.4, RegBlack);
-
-// ------- рисуем нижнюю рельсу ------- //
+// duplicate railGroup for staying at top of page and and place over railGroup object
 railGroup.duplicate();
+// place to bottom of page and rotate
 railGroup.rotate(180);
-railGroup.position = [0, mm * 4];
+railGroup.position = [0, 4 * mm];
 
-/////////////////////////////////////////////
-//             Блок функций                //
-/////////////////////////////////////////////
-function Line(Top, Left, Width, Height, my_Fill) {
-    pathRef = railGroup.pathItems.rectangle(Top, Left, Width, Height);
-    pathRef.stroked = false;
-    pathRef.filled = true;
-    pathRef.fillColor = my_Fill;
+/**
+ *
+ * @param {number} top
+ * @param {number} left
+ * @param {number} width
+ * @param {number} height
+ * @param {CMYKColor} [fillColor]
+ * @constructor
+ */
+function Box(top, left, width, height, fillColor) {
+    this.pathRef = railGroup.pathItems.rectangle(top, left, width, height);
+    this.pathRef.stroked = false;
+    this.pathRef.filled = true;
+    this.pathRef.fillColor = fillColor || regColorBlack;
 }
+
+
