@@ -100,9 +100,9 @@ if (!checkCompensation()) {
         [[332.7285, 217.0322], [324.8301, 217.0322], [324.8301, 212.2041]]
     ];
     var compensationSignGroup = doc.groupItems.add();
-    for (j = 0; j < points.length; j++) {
+    for (var i = 0; i < points.length; i++) {
         var compensationSignPath = compensationSignGroup.pathItems.add();
-        compensationSignPath.setEntirePath(points[j]);
+        compensationSignPath.setEntirePath(points[i]);
         compensationSignPath.guides = true;
     }
     compensationSignGroup.position = [8 * mm, docHeight + 10 * mm];
