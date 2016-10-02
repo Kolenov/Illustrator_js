@@ -1,40 +1,33 @@
 var doc = activeDocument;
 var docHeight = doc.height;
 var docWidth = doc.width;
-var pathRef;
 var mm = 2.834645;
-var swatchNAME = doc.swatches;
-var RegColorBL;
 
-//------Gray colour Registration 10%-----//
-try {
-    RegColorBL = swatchNAME["[Registration]"].color;
-} catch (e) {
-    RegColorBL = swatchNAME["[Совмещение]"].color;
-}
-RegColorBL.tint = 10;
-var MyGray = RegColorBL;
+// black color for registration marks
+var regColorGray = doc.swatches[1].color;
+regColorGray.tint = 10;
 
-//  set up zero   //
 doc.rulerOrigin = [0, 0];
-//  deselect all   //
 doc.selection = null;
+
 //  Check the layer Registration10. If this is - removing  //
 var countOfLayers = doc.layers.length;
-for (var j = countOfLayers - 1; j >= 0; j--) {
-    var targetLayer = doc.layers[j];
+for (var i = countOfLayers - 1; i >= 0; i--) {
+    var targetLayer = doc.layers[i];
     var layerName = targetLayer.name;
     if (layerName === "Registration10") {
-        doc.layers[j].remove();
+        doc.layers[i].remove();
     }
 }
 //  Create the layer Registration10  //
-var newLayer = doc.layers.add();
-newLayer.name = "Registration10";
-newLayer.zOrder(ZOrderMethod.SENDTOBACK); // jshint ignore:line
+var registrationLayer = doc.layers.add();
+registrationLayer.name = "Registration10";
+registrationLayer.zOrder(ZOrderMethod.SENDTOBACK);
+
 //  Draw a rectangle  with fillColor Registration 10%  //
-pathRef = doc.activeLayer.pathItems.rectangle(docHeight - mm, 0, docWidth, docHeight - 2 * mm);
+var pathRef = doc.activeLayer.pathItems.rectangle(docHeight - mm, 0, docWidth, docHeight - 2 * mm);
 pathRef.filled = true;
-pathRef.fillColor = MyGray;
+pathRef.fillColor = regColorGray;
 pathRef.stroked = false;
 pathRef.selected = true;
+regColorGray.tint = 100;
