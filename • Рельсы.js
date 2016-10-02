@@ -25,13 +25,13 @@ new Box(docHeight - mm, 0, docWidth, 2 * mm);
 new Box(docHeight - mm, docWidth / 2 - 2 * mm, 4 * mm, 2 * mm, regColorWhite);
 new Box(docHeight - 2 * mm + 0.125, docWidth / 2 - 2 * mm, 4 * mm, 0.25);
 new Box(docHeight - mm, docWidth / 2 - 0.125, 0.25, 2 * mm);
-// make left mark
+// make toLeft mark
 new Box(docHeight - 4 * mm + 0.4, 0, 5 * mm, 0.4);
 new Box(docHeight - mm, 5 * mm - 0.4, 0.4, 3 * mm);
 new Box(docHeight, 5 * mm - 0.4, 0.4, mm, regColorWhite);
 new Box(docHeight - 2 * mm, 0, 5 * mm - 0.4, 2 * mm - 0.4, regColorWhite);
 new Box(docHeight - 3 * mm + 0.2, 0, 2 * mm, 0.4);
-// make right mark
+// make toRight mark
 new Box(docHeight - 4 * mm + 0.4, docWidth - 5 * mm, 5 * mm, 0.4);
 new Box(docHeight - mm, docWidth - 5 * mm, 0.4, 3 * mm);
 new Box(docHeight, docWidth - 5 * mm, 0.4, mm, regColorWhite);
@@ -59,5 +59,3 @@ function Box(top, left, width, height, fillColor) {
     this.pathRef.filled = true;
     this.pathRef.fillColor = fillColor || regColorBlack;
 }
-
-
