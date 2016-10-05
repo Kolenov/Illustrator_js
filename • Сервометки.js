@@ -178,13 +178,26 @@ ServoGroup.position = [docWidth - ServoWidth - 15 * mm, docHeight + 3 * mm];
 //}
 //*********************************
 
+/**
+ *
+ * @param Top
+ * @param Left
+ * @param Width
+ * @param Height
+ * @param my_Fill
+ * @constructor
+ */
 function Line(Top, Left, Width, Height, my_Fill) {
     pathRef = ServoGroup.pathItems.rectangle(Top, Left, Width, Height);
     pathRef.stroked = false;
     pathRef.filled = true;
     pathRef.fillColor = my_Fill;
 }
-
+/**
+ *
+ * @param my_Fill
+ * @constructor
+ */
 function Markers(my_Fill) {
     var Marker = ServoGroup.pathItems.add();
     var points = [[-12.189, 0], [-5.66943, 11.3384], [0, 11.3384], [0, 0]];
@@ -196,6 +209,12 @@ function Markers(my_Fill) {
     Marker.position = [_start, 4 * mm];
 }
 
+/**
+ *
+ * @param obj
+ * @returns {*|SpotColor}
+ * @constructor
+ */
 function MarkerColor(obj) {
     newColor = new SpotColor();
     newColor = obj.color;

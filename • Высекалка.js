@@ -1,51 +1,62 @@
 var doc = activeDocument;
-//  устанавливаем ноль
-doc.rulerOrigin = [0, 0];
-//  деселект все
-doc.selection = null;
 var docHeight = doc.height;
 var docWidth = doc.width;
-var docName = activeDocument.name;
+var docName = doc.name;
 var mm = 2.834645;
-var textRef = doc.textFrames;
 var Zub = 3.175;
 var z = Math.floor(docWidth / mm / Zub);
-//  шаг печати
+
 var step = (docWidth / mm).toPrecision(6);
-var blackColor = DefineCMYK(0, 0, 0, 100);
+var blackColor = defineCMYK(0, 0, 0, 100);
 
-//  Дата и имя документа
-var dateDocNameText = SetText(10, "PragmaticaC", blackColor, "«Арт-Флекс» Днепропетровск  " + docName + " (" + TodayDate() + ")");
+doc.rulerOrigin = [0, 0];
+doc.selection = null;
+
+// current date and document name
+var dateDocNameTextContents = "«Арт-Флекс» Днепропетровск  " + docName + " (" + todayDate() + ")";
+var dateDocNameText = makeText(dateDocNameTextContents, 10, blackColor);
 dateDocNameText.top = docHeight + 30;
-dateDocNameText.left = 0;
+dateDocNameText.toLeft = 0;
 
-//  Ширина материала
-var materialHeightText = SetText(10, "PragmaticaC", blackColor, "ширина полотна " + Math.round(docHeight / mm) + " mm");
+// material height
+var materialHeightTextContents = "ширина полотна " + Math.round(docHeight / mm) + " mm";
+var materialHeightText = makeText(materialHeightTextContents, 10, blackColor);
 materialHeightText.position = [-materialHeightText.width / 2 - 20, docHeight / 2 + 3];
 materialHeightText.rotate(90);
 
-// Типа материала
-var materialTipeText = SetText(10, "PragmaticaC", blackColor, "Z=" + z + " (" + step + " mm)");
-materialTipeText.position = [docWidth / 2 - materialTipeText.width / 2 + 50, docHeight + 60];
-materialTipeText = SetText(10, "PragmaticaC", blackColor, "--------------->");
-materialTipeText.position = [docWidth / 2 - materialTipeText.width / 2 + 50, docHeight + 45];
+// material type
+var materialTypeTextContents = "Z=" + z + " (" + step + " mm)";
+var materialTypeText = makeText(materialTypeTextContents, 10, blackColor);
+materialTypeText.position = [docWidth / 2 - materialTypeText.width / 2 + 50, docHeight + 60];
+
+var arrowText = makeText("--------------->", 10, blackColor);
+arrowText.position = [docWidth / 2 - arrowText.width / 2 + 50, docHeight + 45];
 
 var Check = confirm("Бумага?");
 if (Check == true) {
-    var paperTypeText = SetText(10, "PragmaticaC", blackColor, "Самоклеящаяся бумага Raflacoat RP51 HG65");
+    var paperTypeText = makeText("Самоклеящаяся бумага Raflacoat RP51 HG65", 10, blackColor);
     paperTypeText.position = [docWidth / 2 - paperTypeText.width / 2 + 50, docHeight + 30];
-    paperTypeText = SetText(10, "PragmaticaC", blackColor, "Подложка: 54-57mkm");
-    paperTypeText.position = [docWidth / 2 - paperTypeText.width / 2 + 50, docHeight + 20];
+
+    var paperBaseText = makeText("Подложка: 54-57mkm", 10, blackColor);
+    paperBaseText.position = [docWidth / 2 - paperBaseText.width / 2 + 50, docHeight + 20];
 }
 else {
-    var filmTypeText = SetText(10, "PragmaticaC", blackColor, "Самоклеящаяся пленка PE6850 85mkm");
+    var filmTypeText = makeText("Самоклеящаяся пленка PE6850 85mkm", 10, blackColor);
     filmTypeText.position = [docWidth / 2 - filmTypeText.width / 2 + 50, docHeight + 30];
-    filmTypeText = SetText(10, "PragmaticaC", blackColor, "Подложка: 54-57mkm");
-    filmTypeText.position = [docWidth / 2 - filmTypeText.width / 2 + 50, docHeight + 20];
+
+    var filmBaseText = makeText("Подложка: 54-57mkm", 10, blackColor);
+    filmBaseText.position = [docWidth / 2 - filmBaseText.width / 2 + 50, docHeight + 20];
 }
 
-
-function DefineCMYK(C, M, Y, K) {
+/**
+ *
+ * @param {number} C
+ * @param {number} M
+ * @param {number} Y
+ * @param {number} K
+ * @returns {CMYKColor}
+ */
+function defineCMYK(C, M, Y, K) {
     var newCMYKColor = new CMYKColor();
     newCMYKColor.black = K;
     newCMYKColor.cyan = C;
@@ -54,43 +65,33 @@ function DefineCMYK(C, M, Y, K) {
     return newCMYKColor;
 }
 
-function SetText(Size, Font, My_Fill, Contents) {
-    var myText = textRef.add();
-    myText.textRange.characterAttributes.size = Size;
-    myText.textRange.characterAttributes.fillColor = My_Fill;
-    try {
-        myText.textRange.characterAttributes.textFont = app.textFonts[Font];
-    }
-    catch (e) {
-        myText.textRange.characterAttributes.textFont = app.textFonts["ArialMT"];
-    }
-    myText.contents = Contents;
-    return myText;
+/**
+ *
+ * @param {string} content
+ * @param {number} fontSize
+ * @param fill
+ * @returns {*}
+ */
+function makeText(content, fontSize, fill) {
+    var textRef = doc.textFrames.add();
+    var textRefAttributes = textRef.textRange.characterAttributes;
+    textRefAttributes.size = fontSize;
+    textRefAttributes.fillColor = fill;
+    textRefAttributes.textFont = app.textFonts["ArialMT"];
+    textRef.contents = content;
+    return textRef;
 }
 
-//  Определяем дату //
 /**
  * @return {string}
  */
-function TodayDate() {
-    var Today = new Date();
-    var Day = Today.getDate();
-    var Month = Today.getMonth() + 1;
-    var Year = Today.getYear();
-    var PreMon = ((Month < 10) ? "0" : "");
-    var PreDay = ((Day < 10) ? "0" : "");
-    if (Year < 999) Year += 1900;
-    return PreDay + Day + "." + PreMon + Month + "." + Year;  // можно поменять вид даты //
-}
-//  Определяем время //
-/**
- * @return {string}
- */
-function TodayTime() {
-    var Today = new Date();
-    var Hours = Today.getHours();
-    var Minutes = Today.getMinutes();
-    var PreHour = ((Hours < 10) ? "0" : "");
-    var PreMin = ((Minutes < 10) ? ":0" : ":");
-    return PreHour + Hours + PreMin + Minutes;
+function todayDate() {
+    var today = new Date();
+    var day = today.getDate();
+    var month = today.getMonth() + 1;
+    var year = today.getYear();
+    var preMon = ((month < 10) ? "0" : "");
+    var preDay = ((day < 10) ? "0" : "");
+    if (year < 999) year += 1900;
+    return preDay + day + "." + preMon + month + "." + year; // можно поменять вид даты //
 }
