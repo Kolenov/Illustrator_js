@@ -21,184 +21,132 @@ regColorBlack.tint = 100;
 var regColorWhite = swatchNames[1].color;
 regColorWhite.tint = 0;
 // no color
-var noColor = swatchNames[0].color;
+var noColor = new NoColor();
 
 const CYAN = defineCMYK(100, 0, 0, 0);
 const MAGENTA = defineCMYK(0, 100, 0, 0);
 const YELLOW = defineCMYK(0, 0, 100, 0);
 const BLACK = defineCMYK(0, 0, 0, 100);
 
-// var w = new Window ("dialog");
-// var s = w.add ("statictext", undefined, "Static");
-// var e = w.add ("edittext", undefined, "Edit");
-// var b = w.add ("button", undefined, "Button");
-// // The window's backround
-// w.graphics.backgroundColor = w.graphics.newBrush (w.graphics.BrushType.SOLID_COLOR, [0.5, 0.0, 0.0]);
-// // Font and its colour for the first item, statictext
-// s.graphics.font = ScriptUI.newFont ("Helvetica", "Bold", 30);
-// s.graphics.foregroundColor = s.graphics.newPen (w.graphics.PenType.SOLID_COLOR, [0.7, 0.7, 0.7], 1);
-// // Font and colours for the second item, edittext
-// e.graphics.font = ScriptUI.newFont ("Letter Gothic Std", "Bold", 30);
-// e.graphics.foregroundColor = e.graphics.newPen (e.graphics.PenType.SOLID_COLOR, [1, 0, 0], 1);
-// e.graphics.backgroundColor = e.graphics.newBrush (e.graphics.BrushType.SOLID_COLOR, [0.5, 0.5, 0.5]);
-// // Font for the tird control, a button. Can't set colours in buttons
-// b.graphics.font = ScriptUI.newFont ("Minion Pro", "Italic", 30);
-// w.show ();
-//
-//
-// var w = new Window('dialog');
-// var greenPen = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR,[0, .6, .2],1);
-// var bluePen = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR,[0, .2, .6],1);
-// var defPen = w.graphics.backgroundColor;
-// w.add("button{text: 'go GREEN'}").onClick = function(){w.graphics.backgroundColor = greenPen;};
-// w.add("button{text: 'go BLUE'}").onClick = function(){w.graphics.backgroundColor = bluePen;};
-// w.add("button{text: 'get LOST'}").onClick = function(){w.graphics.backgroundColor = defPen;};
-// w.show();
+var cmykSwatches = [
+    {name: "C", color: CYAN},
+    {name: "M", color: MAGENTA},
+    {name: "Y", color: YELLOW},
+    {name: "K", color: BLACK},
+];
 
+var scaleAttributes = [];
 
-// var w = new Window("dialog");
-//
-// var components = {
-//     color: {
-//         type: 'color', label: 'Color',
-//         value: '#ff0000'
-//     }
-// };
-// var s = ['cyan', 'magenta', 'yellow', 'black'];
-// var greenPen = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR, [0, .6, .2], 1);
-//
-// var list = w.add('listbox', undefined, undefined, {
-//     numberOfColumns: 3,
-//     showHeaders: true,
-//     columnTitles: ['Typeface', 'Style', 'Type', 'Status'],
-//     columnWidths: [150, 150, 100],
-//     multiselect: true
-// });
-// //list.graphics.backgroundColor = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR, [0.5, 0.0, 0.0]);
-// var i, j, list_item, parts;
-// for (i = 0; i < s.length; i++) {
-//     parts = s[i].split('\t');
-//     list_item = list.add('item', parts[0]);
-//     list_item.image = greenPen;
-//
-//     // for (j = 1; j < parts.length; j++) {
-//     //     list_item.subItems[j-1].text = parts[j];
-//     //     list_item.subItems[j-1].backgroundColor = e.graphics.newBrush(e.graphics.BrushType.SOLID_COLOR, [0.5, 0.0, 0.0]);
-//     // }
-// }
-// w.show();
-
-var w = new Window("dialog");
-w.orientation = 'column';
-w.alignChildren = "fill";
-
-
-var cyanColor = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR, [0.0, 0.5, 1.0]);
-var magentaColor = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR, [0.76, 0.0, 0.5]);
-var yellowColor = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR, [1.0, 0.92, 0.0]);
-var blackColor = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR, [0.0, 0.0, 0.0]);
-
-
-//var panelScaleNameChooser = w.add("panel", undefined);
-//var nameCheck = panelScaleNameChooser.add("checkbox", undefined, "\u00A0Add Names");
-
-w.add("statictext", undefined, "Add Scales");
-
-var panelSwatches = w.add("panel", undefined);
-panelSwatches.orientation = 'column';
-panelSwatches.alignChildren = 'fill';
-panelSwatches.padding = 15;
-
-var swatchCheck = panelSwatches.add("checkbox");
-var swatchCheckChild = [];
-
-swatchCheck.onClick = function () {
-	swatchCheck.setLabel("\u00A0 Uncheck All", "\u00A0 Check All");
-	for (var i = 0; i<swatchCheckChild.length; ++i){
-		swatchCheckChild[i].value = this.value;
-	}
-}
-
-panelSwatches.add("panel {preferredSize: [1, 1]}");
-
-var swatchGroupCyan = panelSwatches.add("group");
-var swatchCheckCyan = swatchGroupCyan.add("checkbox", [0, 0, 15, 15]);
-swatchCheckChild.push(swatchCheckCyan);
-var swatchRectCyan = swatchGroupCyan.add("panel {preferredSize: [20, 20]}");
-
-swatchRectCyan.graphics.backgroundColor = cyanColor;
-swatchGroupCyan.add("statictext", undefined, "Cyan");
-
-var swatchGroupMagenta = panelSwatches.add("group");
-var swatchCheckMagenta = swatchGroupMagenta.add("checkbox", [0, 0, 15, 15]);
-swatchCheckChild.push(swatchCheckMagenta);
-var swatchRectMagenta = swatchGroupMagenta.add("panel {preferredSize: [20, 20]}");
-swatchRectMagenta.graphics.backgroundColor = magentaColor;
-swatchGroupMagenta.add("statictext", undefined, 'Magenta');
-
-var swatchGroupYellow = panelSwatches.add('group');
-var swatchCheckYellow = swatchGroupYellow.add("checkbox", [0, 0, 15, 15]);
-swatchCheckChild.push(swatchCheckYellow);
-var swatchRectYellow = swatchGroupYellow.add("panel {preferredSize: [20, 20]}");
-swatchRectYellow.graphics.backgroundColor = yellowColor;
-swatchGroupYellow.add("statictext", undefined, 'Yellow');
-
-var swatchGroupBlack = panelSwatches.add('group');
-var swatchCheckBlack = swatchGroupBlack.add("checkbox", [0, 0, 15, 15]);
-swatchCheckChild.push(swatchCheckBlack);
-var swatchRectBlack = swatchGroupBlack.add("panel {preferredSize: [20, 20]}");
-swatchRectBlack.graphics.backgroundColor = blackColor;
-swatchGroupBlack.add("statictext", undefined, 'Black');
-
-
-
-
-(function () {
-	//var panelSwatches = w.add('panel');
-	//panelSwatches.orientation = 'column';
-	//panelSwatches.alignChildren = 'toLeft';
-
-	var spotCount = doc.spots.length;
-	for (var i = 0; i < spotCount; ++i) {
-		var swatchGroup = panelSwatches.add('group');
-		swatchGroup.orientation = 'row';
-		var swatchCheck = swatchGroup.add("checkbox", [0, 0, 15, 15]);
-		swatchCheckChild.push(swatchCheck);
-		var colorw = doc.spots[i].color;
-		var swatchRect = swatchGroup.add("panel {preferredSize: [20, 20]}");
-		var myColor = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR, cmyk2rgb(colorw));
-
-		swatchRect.graphics.backgroundColor = myColor;
-		var name = doc.spots[i].name;
-
-		var swatchName = swatchGroup.add("statictext", undefined, name);
-	}
-})();
-
-
-(function setChecked(element) {
-	if (element.children.length != null) {
-		for (var i = 0; i < element.children.length; ++i) {
-			if (element.children[i].type == 'checkbox') {
-				element.children[i].value = true;
-			} else {
-				setChecked(element.children[i]);
-			}
-		}
-	}
-})(w);
-
-Checkbox.prototype.value = true;
-Checkbox.prototype.setLabel = function (checkedLabel, uncheckedLabel) {
-	if (this.value == true) {
-		this.text = checkedLabel;
-		return;
-	}
-	this.text = uncheckedLabel;
+Checkbox.prototype.swapLabels = function swapLabels(uncheckedLabel, checkedLabel) {
+    if (this.value == true) {
+        this.text = checkedLabel;
+        return;
+    }
+    this.text = uncheckedLabel;
 };
 
+var w = new Window("dialog");
+w.orientation = "row";
+w.alignChildren = "fill";
 
-swatchCheck.setLabel("\u00A0 Uncheck All", "\u00A0 Check All");
+// var cyanColor = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR, [0.0, 0.5, 1.0]);
+// var magentaColor = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR, [0.76, 0.0, 0.5]);
+// var yellowColor = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR, [1.0, 0.92, 0.0]);
+// var blackColor = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR, [0.0, 0.0, 0.0]);
+
+var panelCMYKswatches = w.add("panel", undefined, "Add CMYK");
+panelCMYKswatches.orientation = "column";
+panelCMYKswatches.alignChildren = "left";
+panelCMYKswatches.spacing = 3;
+panelCMYKswatches.margins = [15, 20, 15, 15];
+
+var swatchCMYKcheck = panelCMYKswatches.add("checkbox", undefined, "\u00A0 All");
+swatchCMYKcheck.value = true;
+swatchCMYKcheck.characters = 10;
+
+swatchCMYKcheck.onClick = function () {
+    this.swapLabels("\u00A0 None", "\u00A0 All");
+    for (var i = 0; i < scaleAttributes.length; ++i) {
+        if (scaleAttributes[i].color.colorType != "ColorModel.SPOT") {
+            scaleAttributes[i].checker.value = this.value;
+        }
+    }
+};
+
+/////////////////////////////////////////////////////////////
+var panelSPOTswatches = w.add("panel", undefined, "Add Pantone");
+panelSPOTswatches.orientation = "column";
+panelSPOTswatches.alignChildren = "left";
+panelSPOTswatches.spacing = 3;
+panelSPOTswatches.margins = [15, 20, 15, 15];
+
+var swatchSPOTcheck = panelSPOTswatches.add("checkbox", undefined, "\u00A0 All");
+swatchSPOTcheck.value = true;
+swatchSPOTcheck.characters = 10;
+
+swatchSPOTcheck.onClick = function () {
+    this.swapLabels("\u00A0 None", "\u00A0 All");
+    for (var i = 0; i < scaleAttributes.length; ++i) {
+        if (scaleAttributes[i].color.colorType == "ColorModel.SPOT") {
+            scaleAttributes[i].checker.value = this.value;
+        }
+    }
+};
+
+//panelCMYKswatches.add("panel {preferredSize: [1, 1]}");
+
+function makeSwatchesChooser(collection, place) {
+    var count = collection.length;
+    for (var i = 0; i < count; ++i) {
+
+        if (collection[i].colorType != "ColorModel.REGISTRATION") {
+            var elementName = collection[i].name;
+            var elementColor = collection[i].color;
+            var swatchColor = cmyk2rgb(elementColor);
+
+            var swatchGroup = place.add("group");
+            swatchGroup.orientation = "row";
+
+            var swatchRectangle = swatchGroup.add("panel {preferredSize: [20, 20]}");
+            swatchRectangle.graphics.backgroundColor = w.graphics.newBrush(w.graphics.BrushType.SOLID_COLOR, swatchColor);
+            var checkGroup = swatchGroup.add("group");
+            checkGroup.margins = [0, 5, 0, 0];
+            var swatchCheck = checkGroup.add("checkbox", undefined, elementName);
+            swatchCheck.value = true;
+            swatchCheck.text = "\u00A0" + elementName;
+
+            scaleAttributes.push(new Swatches(swatchCheck, collection[i]));
+        }
+    }
+}
+
+makeSwatchesChooser(cmykSwatches, panelCMYKswatches);
+makeSwatchesChooser(doc.spots, panelSPOTswatches);
+
+// (function setChecked(element) {
+//     if (element.children.length != null) {
+//         for (var i = 0; i < element.children.length; ++i) {
+//             if (element.children[i].type == 'checkbox') {
+//                 element.children[i].value = true;
+//             } else {
+//                 setChecked(element.children[i]);
+//             }
+//         }
+//     }
+// })(w);
+
+/**
+ *
+ * @param {Checkbox} checker
+ * @param {Color} color
+ * @param {string} name
+ * @constructor
+ */
+function Swatches(checker, color) {
+    this.checker = checker;
+    this.color = color;
+    this.name = this.checker.text;
+}
 
 
 w.show();
@@ -344,11 +292,11 @@ w.show();
  * @param {CMYKColor} color
  */
 function addSpotColor(name, tint, color) {
-	var mySpots = doc.spots;
-	var newSpot = mySpots.add();
-	newSpot.color = color;
-	newSt.name = name;
-	newSpot.tint = tint;
+    var mySpots = doc.spots;
+    var newSpot = mySpots.add();
+    newSpot.color = color;
+    newSt.name = name;
+    newSpot.tint = tint;
 }
 
 /**
@@ -360,12 +308,12 @@ function addSpotColor(name, tint, color) {
  * @returns {CMYKColor}
  */
 function defineCMYK(C, M, Y, K) {
-	var newCMYKColor = new CMYKColor();
-	newCMYKColor.black = K;
-	newCMYKColor.cyan = C;
-	newCMYKColor.magenta = M;
-	newCMYKColor.yellow = Y;
-	return newCMYKColor;
+    var newCMYKColor = new CMYKColor();
+    newCMYKColor.black = K;
+    newCMYKColor.cyan = C;
+    newCMYKColor.magenta = M;
+    newCMYKColor.yellow = Y;
+    return newCMYKColor;
 }
 /**
  *
@@ -373,17 +321,16 @@ function defineCMYK(C, M, Y, K) {
  * @returns {*[]}
  */
 function cmyk2rgb(color) {
+    var C = color.cyan / 100;
+    var M = color.magenta / 100;
+    var Y = color.yellow / 100;
+    var K = color.black / 100;
 
-	var C = color.cyan / 100;
-	var M = color.magenta / 100;
-	var Y = color.yellow / 100;
-	var K = color.black / 100;
+    var R = (1 - C) * (1 - K);
+    var G = (1 - M) * (1 - K);
+    var B = (1 - Y) * (1 - K);
 
-	var R = (1 - C) * (1 - K);
-	var G = (1 - M) * (1 - K);
-	var B = (1 - Y) * (1 - K);
-
-	return [R, G, B];
+    return [R, G, B];
 }
 
 
