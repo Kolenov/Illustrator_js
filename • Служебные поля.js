@@ -14,9 +14,10 @@ black.spot = swatchNames[1].color;
 black.tint = 100;
 var regColorBlack = black.spot;
 // white color for registration marks
-var regColorWhite = new SpotColor();
-regColorWhite.spot = swatchNames[1].color;
-regColorWhite.tint = 0;
+var white = new SpotColor();
+white.spot = swatchNames[1].color;
+white.tint = 0;
+var regColorWhite = white.spot;
 // no color
 var noColor = new NoColor();
 
