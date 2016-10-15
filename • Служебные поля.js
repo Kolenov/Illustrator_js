@@ -1,5 +1,4 @@
-﻿﻿'use strict';
-var doc = activeDocument;
+﻿var doc = activeDocument;
 var lastSpot = doc.spots.length - 1;
 var docHeight = doc.height;
 var docWidth = doc.width;
@@ -7,7 +6,6 @@ var docName = doc.name;
 var mm = 2.834645;
 
 var makeCompensationMessage = "--- Сделай Компенсацию! ---";
-
 
 // black color for registration marks
 var regColorBlack = new SpotColor();
@@ -18,8 +16,6 @@ regColorBlack.tint = 100;
 var regColorWhite = new SpotColor();
 regColorWhite.spot = doc.spots[lastSpot];
 regColorWhite.tint = 0;
-// no color
-var noColor = new NoColor();
 
 doc.rulerOrigin = [0, 0];
 doc.selection = null;
