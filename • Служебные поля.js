@@ -1,23 +1,23 @@
-﻿'use strict';
+﻿﻿'use strict';
 var doc = activeDocument;
+var lastSpot = doc.spots.length - 1;
 var docHeight = doc.height;
 var docWidth = doc.width;
 var docName = doc.name;
 var mm = 2.834645;
-var swatchNames = doc.swatches;
 
 var makeCompensationMessage = "--- Сделай Компенсацию! ---";
 
+
 // black color for registration marks
-var black = new SpotColor();
-black.spot = swatchNames[1].color;
-black.tint = 100;
-var regColorBlack = black.spot;
+var regColorBlack = new SpotColor();
+regColorBlack.spot = doc.spots[lastSpot];
+regColorBlack.tint = 100;
+
 // white color for registration marks
-var white = new SpotColor();
-white.spot = swatchNames[1].color;
-white.tint = 0;
-var regColorWhite = white.spot;
+var regColorWhite = new SpotColor();
+regColorWhite.spot = doc.spots[lastSpot];
+regColorWhite.tint = 0;
 // no color
 var noColor = new NoColor();
 

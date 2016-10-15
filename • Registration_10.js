@@ -1,10 +1,12 @@
 var doc = activeDocument;
 var docHeight = doc.height;
+var lastSpot = doc.spots.length - 1;
 var docWidth = doc.width;
 var mm = 2.834645;
 
 // black color for registration marks
-var regColorGray = doc.swatches[1].color;
+var regColorGray = new SpotColor();
+regColorGray.spot = doc.spots[lastSpot];
 regColorGray.tint = 10;
 
 doc.rulerOrigin = [0, 0];
@@ -30,4 +32,3 @@ pathRef.filled = true;
 pathRef.fillColor = regColorGray;
 pathRef.stroked = false;
 pathRef.selected = true;
-regColorGray.tint = 100;

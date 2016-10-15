@@ -1,5 +1,6 @@
 "use strict";
 var doc = activeDocument;
+var lastSpot = doc.spots.length - 1;
 var docHeight = doc.height;
 var docWidth = doc.width;
 var mm = 2.834645;
@@ -15,17 +16,11 @@ doc.rulerOrigin = [0, 0];
 //  деселект все   //
 doc.selection = null;
 
-//------Черный цвет регистрэйшн-----//
-// var regColorBlack = swatchNames[1].color;
-// regColorBlack.tint = 100;
-// var RegBlack = regColorBlack;
-//-------Белый цвет регистрэйшн-----//
-var regColorWhite = swatchNames[1].color;
+// white color for registration marks
+var regColorWhite = new SpotColor();
+regColorWhite.spot = doc.spots[lastSpot];
 regColorWhite.tint = 0;
-var regWhite = regColorWhite;
-//--------------Без цвета------------//
-var noColorSwatch = swatchNames[0].color;
-var noColor = noColorSwatch;
+
 
 var isMakeScaleLayer = true;
 var isMakeSwatch = true;
@@ -40,10 +35,10 @@ for (var i = 0; i < swatchNames.length; i++) {
 if (isMakeSwatch === true) {
 	var checkConfirm = confirm(addCmykMessage);
 	if (checkConfirm === true) {
-		addSpotColor("C", 100, DefineCMYK(100, 0, 0, 0)); //Cyan
-		addSpotColor("M", 100, DefineCMYK(0, 100, 0, 0)); //Magenta
-		addSpotColor("Y", 100, DefineCMYK(0, 0, 100, 0)); //Yellow
-		addSpotColor("K", 100, DefineCMYK(0, 0, 0, 100)); //Black
+		addSpotColor("C", 100, defineCMYK(100, 0, 0, 0)); //Cyan
+		addSpotColor("M", 100, defineCMYK(0, 100, 0, 0)); //Magenta
+		addSpotColor("Y", 100, defineCMYK(0, 0, 100, 0)); //Yellow
+		addSpotColor("K", 100, defineCMYK(0, 0, 0, 100)); //Black
 	}
 }
 
@@ -135,7 +130,7 @@ function makeSwatchName(counter) {
 
 	textRef.textRange.characterAttributes.stroked = true;
 	textRef.textRange.characterAttributes.strokeWidth = 1;
-	textRef.textRange.characterAttributes.strokeColor = regWhite;
+	textRef.textRange.characterAttributes.strokeColor = regColorWhite;
 
 	textRef.position = [startSwatchNamePoint, docHeight + 1.5 - mm];
 	startSwatchNamePoint += textWidth;
@@ -150,7 +145,7 @@ function addSpotColor(name, tint, color) {
 	newSpot.tint = tint;
 }
 
-function DefineCMYK(C, M, Y, K) {
+function defineCMYK(C, M, Y, K) {
 	var newCMYKColor = new CMYKColor();
 	newCMYKColor.black = K;
 	newCMYKColor.cyan = C;

@@ -3,8 +3,8 @@ var docHeight = doc.height;
 var docWidth = doc.width;
 var docName = doc.name;
 var mm = 2.834645;
-var Zub = 3.175;
-var z = Math.floor(docWidth / mm / Zub);
+var zub = 3.175;
+var z = Math.floor(docWidth / mm / zub);
 
 var step = (docWidth / mm).toPrecision(6);
 var blackColor = defineCMYK(0, 0, 0, 100);
@@ -69,14 +69,16 @@ function defineCMYK(C, M, Y, K) {
  *
  * @param {string} content
  * @param {number} fontSize
- * @param fill
+ * @param {Color} fill
  * @returns {*}
  */
 function makeText(content, fontSize, fill) {
     var textRef = doc.textFrames.add();
     var textRefAttributes = textRef.textRange.characterAttributes;
-    textRefAttributes.size = fontSize;
+    textRefAttributes.filled = true;
+    textRefAttributes.stroked = false;
     textRefAttributes.fillColor = fill;
+    textRefAttributes.size = fontSize;
     textRefAttributes.textFont = app.textFonts["ArialMT"];
     textRef.contents = content;
     return textRef;
