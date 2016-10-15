@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 var doc = activeDocument;
 var docHeight = doc.height;
 var docWidth = doc.width;
@@ -9,13 +9,16 @@ var swatchNames = doc.swatches;
 var makeCompensationMessage = "--- Сделай Компенсацию! ---";
 
 // black color for registration marks
-var regColorBlack = swatchNames[1].color;
-regColorBlack.tint = 100;
+var black = new SpotColor();
+black.spot = swatchNames[1].color;
+black.tint = 100;
+var regColorBlack = black.spot;
 // white color for registration marks
-var regColorWhite = swatchNames[1].color;
+var regColorWhite = new SpotColor();
+regColorWhite.spot = swatchNames[1].color;
 regColorWhite.tint = 0;
 // no color
-var noColor = swatchNames[0].color;
+var noColor = new NoColor();
 
 doc.rulerOrigin = [0, 0];
 doc.selection = null;
@@ -49,8 +52,10 @@ if (!checkCompensation()) {
     //material dimensions marks
     var materialDimensionsTop = doc.pathItems.rectangle(docHeight + 0.2, 0, mm * 20, 0.2);
     materialDimensionsTop.fillColor = regColorBlack;
+    materialDimensionsTop.stroked = false;
     var materialDimensionsBottom = doc.pathItems.rectangle(0, 0, mm * 20, 0.2);
     materialDimensionsBottom.fillColor = regColorBlack;
+    materialDimensionsBottom.stroked = false;
 
     //material dimensions information
     var materialInformationContent = "Ширина материала   " + Math.round(docHeight / mm) + " mm";
@@ -61,16 +66,20 @@ if (!checkCompensation()) {
     //marker of compensation
     var topLeft = doc.pathItems.rectangle(docHeight + 5 * mm, 9.9 * mm / 2, 0.2, 5 * mm);
     topLeft.fillColor = regColorBlack;
+    topLeft.stroked = false;
     var bottomLeft = doc.pathItems.rectangle(0, 9.9 * mm / 2, 0.2, 5 * mm);
     bottomLeft.fillColor = regColorBlack;
+    bottomLeft.stroked = false;
     var topRight = doc.pathItems.rectangle(docHeight + 5 * mm, docWidth - 9.9 * mm / 2, 0.2, 5 * mm);
     topRight.fillColor = regColorBlack;
-    var bottomRight = doc.pathItems.rectangle(0, docWidth - 9.9 * mm / 2, 0.2, 5 * mm)
+    topRight.stroked = false;
+    var bottomRight = doc.pathItems.rectangle(0, docWidth - 9.9 * mm / 2, 0.2, 5 * mm);
     bottomRight.fillColor = regColorBlack;
+    bottomRight.stroked = false;
 
     guideGen(9.9 * mm / 2, 0);
 
-    var points = [
+    var markerSignPoints = [
         [[371.2578, 205.8467], [371.2578, 207.376], [370.501, 207.376]],
         [[370.501, 207.376], [363.3594, 207.376], [363.3594, 217.0322]],
         [[352.5068, 213.8936], [352.5068, 217.0322], [344.6094, 217.0322], [344.6094, 207.376], [352.5068, 207.376]],
@@ -100,10 +109,12 @@ if (!checkCompensation()) {
         [[332.7285, 217.0322], [324.8301, 217.0322], [324.8301, 212.2041]]
     ];
     var compensationSignGroup = doc.groupItems.add();
-    for (var i = 0; i < points.length; i++) {
+    for (var i = 0; i < markerSignPoints.length; i++) {
         var compensationSignPath = compensationSignGroup.pathItems.add();
-        compensationSignPath.setEntirePath(points[i]);
+        compensationSignPath.setEntirePath(markerSignPoints[i]);
         compensationSignPath.guides = true;
+        compensationSignPath.filled = false;
+        compensationSignPath.stroked = false;
     }
     compensationSignGroup.position = [8 * mm, docHeight + 10 * mm];
 }
@@ -118,8 +129,9 @@ if (!checkCompensation()) {
 function makeText(content, fontSize, fill) {
     var textRef = doc.textFrames.add();
     var textRefAttributes = textRef.textRange.characterAttributes;
-    textRefAttributes.size = fontSize;
+    textRefAttributes.stroked = false;
     textRefAttributes.fillColor = fill;
+    textRefAttributes.size = fontSize;
     textRefAttributes.textFont = app.textFonts["ArialMT"];
     textRef.contents = content;
     return textRef;
@@ -175,7 +187,7 @@ function guideGen(startPoint, orientation) {
     }
     var guideLine = doc.activeLayer.pathItems.add();
 
-    guideLine.stroked = true;
+    guideLine.stroked = false;
     guideLine.filled = false;
     guideLine.guides = true;
     guideLine.setEntirePath(position);
