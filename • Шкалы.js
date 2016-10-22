@@ -5,15 +5,18 @@ var docHeight = doc.height;
 var docWidth = doc.width;
 var mm = 2.834645;
 var swatchNames = doc.swatches;
-var startStripPoint = doc.width / 2 - mm * 8; //начало первого стрипа
-var startSwatchNamePoint = doc.width / 2 + mm * 4; //начало первого названия свотчеса
+// first strip start point
+var startStripPoint = doc.width / 2 - mm * 8;
+// first name start point
+var startSwatchNamePoint = doc.width / 2 + mm * 4;
 var addCmykMessage = "Add CMYK Swatches";
 var addScaleMessage = "Add Scales";
 var addNameSwatchesMessage = "Add Name Colors";
+var scaleLayerName = "Scale";
 var tintPercentage = [2, 10, 50, 80, 100];
-//  устанавливаем ноль
+// set zero point for document
 doc.rulerOrigin = [0, 0];
-//  деселект все   //
+// deselect all
 doc.selection = null;
 
 // white color for registration marks
@@ -22,134 +25,173 @@ regColorWhite.spot = doc.spots[lastSpot];
 regColorWhite.tint = 0;
 
 
-var isMakeScaleLayer = true;
-var isMakeSwatch = true;
-
-for (var i = 0; i < swatchNames.length; i++) {
-	if (swatchNames[i].name == ["C"] || swatchNames[i].name == ["M"] || swatchNames[i].name == ["Y"] || swatchNames[i].name == ["K"]) {
-	   isMakeSwatch = false;
-		break;
-	}
+if (isMakeSwatch()) {
+    var checkConfirm = confirm(addCmykMessage);
+    if (checkConfirm === true) {
+        addSpotColor("C", 100, defineCMYK(100, 0, 0, 0)); //Cyan
+        addSpotColor("M", 100, defineCMYK(0, 100, 0, 0)); //Magenta
+        addSpotColor("Y", 100, defineCMYK(0, 0, 100, 0)); //Yellow
+        addSpotColor("K", 100, defineCMYK(0, 0, 0, 100)); //Black
+    }
 }
 
-if (isMakeSwatch === true) {
-	var checkConfirm = confirm(addCmykMessage);
-	if (checkConfirm === true) {
-		addSpotColor("C", 100, defineCMYK(100, 0, 0, 0)); //Cyan
-		addSpotColor("M", 100, defineCMYK(0, 100, 0, 0)); //Magenta
-		addSpotColor("Y", 100, defineCMYK(0, 0, 100, 0)); //Yellow
-		addSpotColor("K", 100, defineCMYK(0, 0, 0, 100)); //Black
-	}
-}
-
-// ------- Шкалы ------- //
+// make scale
 checkConfirm = confirm(addScaleMessage);
 if (checkConfirm === true) {
 
-	makeScaleLayer();
+    if (!findLayer(scaleLayerName)) {
+        makeLayer(scaleLayerName);
+    } else {
+        doc.activeLayer = doc.layers[scaleLayerName];
+    }
 
-	for (i = 2; i < swatchNames.length; i++) {
-		var boxGroup = doc.activeLayer.groupItems.add();
-		var newPath = boxGroup.pathItems;
-		makeStrip();
-		startStripPoint -= mm * 3;
-	}
-
+    for (i = 2; i < swatchNames.length; ++i) {
+        var boxGroup = doc.activeLayer.groupItems.add();
+        var newPath = boxGroup.pathItems;
+        makeStrip(swatchNames[i].color);
+        startStripPoint -= mm * 3;
+    }
 }
-// ------- имена свотчей ------- //
+
+// make swatches name
 checkConfirm = confirm(addNameSwatchesMessage);
 if (checkConfirm === true) {
 
-	makeScaleLayer();
+    if (!findLayer(scaleLayerName)) {
+        makeLayer(scaleLayerName);
+    } else {
+        doc.activeLayer = doc.layers[scaleLayerName];
+    }
 
-	for (i = 2; i < swatchNames.length; i++) {
-		makeSwatchName(i);
-	}
+    for (i = 2; i < swatchNames.length; i++) {
+        makeSwatchName.call(swatchNames[i]);
+    }
 }
 
-function makeScaleLayer() {
-	for (var i = 0; i < doc.layers.length; i++) {
-		if (doc.layers[i].name == "Scale") {
-			isMakeScaleLayer = false;
-			doc.activeLayer = doc.layers["Scale"];
-			break;
-		}
-		//  Создаем новый слой для шкал  //
-		if (isMakeScaleLayer === true) {
-			var newLayer = doc.layers.add();
-			newLayer.name = "Scale";
-			isMakeScaleLayer = false;
-		}
-	}
+/**
+ *
+ * @param name
+ */
+function makeLayer(name) {
+    var newLayer = doc.layers.add();
+    newLayer.name = name;
 }
 
-function makeStrip() {
-	for (var i = 0; i < tintPercentage.length; i++) {
-		makeBox(tintPercentage[i]);
-	}
+/**
+ *
+ * @param {string} name
+ * @returns {boolean}
+ */
+function findLayer(name) {
+    for (var i = 0; i < doc.layers.length; ++i) {
+        if (doc.layers[i].name == name) {
+            return true;
+        }
+    }
+    return false;
 }
 
+/**
+ *
+ * @returns {boolean}
+ */
+function isMakeSwatch() {
+    for (var i = 0; i < swatchNames.length; ++i) {
+        if (swatchNames[i].name == ["C"] || swatchNames[i].name == ["M"] || swatchNames[i].name == ["Y"] || swatchNames[i].name == ["K"]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ *
+ * @param {Color} color
+ */
+function makeStrip(color) {
+    for (var i = 0; i < tintPercentage.length; i++) {
+        makeBox.call(color, tintPercentage[i]);
+    }
+}
+
+/**
+ *
+ * @param {number} tint
+ */
 function makeBox(tint) {
-	var box = newPath.rectangle(mm * 3, mm * 2, mm * 3, mm * 2);
+    var box = newPath.rectangle(mm * 3, mm * 2, mm * 3, mm * 2);
 
-	box.stroked = true;
-	box.strokeWidth = 0.1;
-	box.filled = true;
+    box.stroked = true;
+    box.strokeWidth = 0.1;
+    box.filled = true;
 
-	var boxFillColor = swatchNames[i].color;
-	boxFillColor.tint = 100;
-	box.strokeColor = boxFillColor;
-	boxFillColor.tint = tint;
-	box.fillColor = boxFillColor;
+    var boxFillColor = this;
+    boxFillColor.tint = 100;
+    box.strokeColor = boxFillColor;
+    boxFillColor.tint = tint;
+    box.fillColor = boxFillColor;
 
-	box.position = [startStripPoint, docHeight - mm];
-	startStripPoint -= mm * 3;
+    box.position = [startStripPoint, docHeight - mm];
+    startStripPoint -= mm * 3;
 }
 
-function makeSwatchName(counter) {
-	var textGroup = doc.activeLayer.groupItems.add();
+/**
+ *
+ */
+function makeSwatchName() {
+    var textGroup = doc.activeLayer.groupItems.add();
+    var textRef = textGroup.textFrames.add();
 
-	var textRef = textGroup.textFrames.add();
+    var textAttributes = textRef.textRange.characterAttributes;
+    textAttributes.size = 8;
+    textAttributes.stroked = false;
+    textAttributes.wrapInside = true;
+    textAttributes.fillColor = this.color;
+    try {
+        textAttributes.textFont = app.textFonts["PragmaticaC"];
+    } catch (e) {
+        textAttributes.textFont = app.textFonts["ArialMT"];
+    }
+    textRef.contents = this.name;
 
-	textRef.textRange.characterAttributes.size = 8;
-	textRef.textRange.characterAttributes.stroked = false;
-	textRef.textRange.characterAttributes.wrapInside = true;
-	textRef.textRange.characterAttributes.fillColor = swatchNames[i].color;
-	try {
-		textRef.textRange.characterAttributes.textFont = app.textFonts["PragmaticaC"];
-	} catch (e) {
-		textRef.textRange.characterAttributes.textFont = app.textFonts["ArialMT"];
-	}
-	textRef.contents = swatchNames[counter].name;
+    textRef.position = [startSwatchNamePoint, docHeight + 1.5 - mm];
 
+    textRef.duplicate();
 
-	var textWidth = textRef.width;
-	textRef.position = [startSwatchNamePoint, docHeight + 1.5 - mm];
+    textAttributes.stroked = true;
+    textAttributes.strokeWidth = 1;
+    textAttributes.strokeColor = regColorWhite;
 
-	textRef.duplicate();
-
-	textRef.textRange.characterAttributes.stroked = true;
-	textRef.textRange.characterAttributes.strokeWidth = 1;
-	textRef.textRange.characterAttributes.strokeColor = regColorWhite;
-
-	textRef.position = [startSwatchNamePoint, docHeight + 1.5 - mm];
-	startSwatchNamePoint += textWidth;
+    textRef.position = [startSwatchNamePoint, docHeight + 1.5 - mm];
+    startSwatchNamePoint += textRef.width;
 }
 
-
+/**
+ *
+ * @param {string} name
+ * @param {number} tint
+ * @param {Color} color
+ */
 function addSpotColor(name, tint, color) {
-	var mySpots = doc.spots;
-	var newSpot = mySpots.add();
-	newSpot.color = color;
-	newSpot.name = name;
-	newSpot.tint = tint;
+    var mySpots = doc.spots;
+    var newSpot = mySpots.add();
+    newSpot.color = color;
+    newSpot.name = name;
+    newSpot.tint = tint;
 }
 
+/**
+ *
+ * @param {number} C
+ * @param {number} M
+ * @param {number} Y
+ * @param {number} K
+ */
 function defineCMYK(C, M, Y, K) {
-	var newCMYKColor = new CMYKColor();
-	newCMYKColor.black = K;
-	newCMYKColor.cyan = C;
-	newCMYKColor.magenta = M;
-	newCMYKColor.yellow = Y;
-	return newCMYKColor;
+    var newCMYKColor = new CMYKColor();
+    newCMYKColor.black = K;
+    newCMYKColor.cyan = C;
+    newCMYKColor.magenta = M;
+    newCMYKColor.yellow = Y;
+    return newCMYKColor;
 }
