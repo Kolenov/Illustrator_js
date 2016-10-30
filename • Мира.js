@@ -1,59 +1,24 @@
+"use strict";
 if (documents.length > 0) {
     var doc = activeDocument;
     var docHeight = doc.height;
     var docWidth = doc.width;
-    var swatchNAME = doc.swatches;
+    var swatchNames = doc.swatches;
+    var lastSpot = doc.spots.length - 1;
     var mm = 72 / 25.4;
-    var start = doc.width / 2 - mm * 20; //начало первого стрипа
+    var startPoint = doc.width / 2 - mm * 20; //начало первого стрипа
 
-    //------Черный цвет регистрэйшн-----//
-    try {
-        var RegColorBL = swatchNAME["[Registration]"].color;
-    }
-    catch (e) {
-        var RegColorBL = swatchNAME["[Совмещение]"].color;
-    }
-    RegColorBL.tint = 100;
-    var RegBlack = RegColorBL;
+    // black color for registration marks
+    var regColorBlack = new SpotColor();
+    regColorBlack.spot = doc.spots[lastSpot];
+    regColorBlack.tint = 100;
 
-    //-------Белый цвет регистрэйшн-----//
-    try {
-        var RegColorWH = swatchNAME["[Registration]"].color;
-    }
-    catch (e) {
-        var RegColorWH = swatchNAME["[Совмещение]"].color;
-    }
-    RegColorWH.tint = 0;
-    var RegWhite = RegColorWH;
-
-    //--------------Без цвета------------//
-    try {
-        var NoneColorSW = swatchNAME["[None]"].color;
-    }
-    catch (e) {
-        var NoneColorSW = swatchNAME["[Нет]"].color;
-    }
-    var noColor = NoneColorSW;
-
-
-    for (i = 2; i < swatchNAME.length; i++) {
-        Mira();
-        start = start + mm * 4;
-    }
-}
-
-function Mira() {
-    var MiraGroup = doc.groupItems.add();
-    var MiraFon = MiraGroup.pathItems.add();
-    var pointsForFon = [[473.4189, 243.7412],
-        [464.9141, 243.7412],
-        [464.9141, 252.2451],
-        [473.4189, 252.2451]];
-    MiraFon.setEntirePath(pointsForFon);
-    MiraFon.closed = true;
-    MiraFon.stroked = false;
-    MiraFon.filled = true;
-    MiraFon.fillColor = RegWhite;
+    // white color for registration marks
+    var regColorWhite = new SpotColor();
+    regColorWhite.spot = doc.spots[lastSpot];
+    regColorWhite.tint = 0;
+    // no color
+    var noColor = new NoColor();
 
     var pointsForMira = [];
     pointsForMira [0] = [[465.6523, 252.2451],
@@ -179,14 +144,39 @@ function Mira() {
         [464.9141, 250.7422],
         [469.1221, 247.9922]];
 
-    for (j = 0; j < pointsForMira.length; j++) {
-        MiraPath = MiraGroup.pathItems.add();
-        MiraPath.setEntirePath(pointsForMira [j]);
-        MiraPath.closed = true;
-        MiraPath.stroked = false;
-        MiraPath.filled = true;
-        MiraPath.fillColor = swatchNAME[i].color;
+    (function () {
+        for (var i = 2; i < swatchNames.length; i++) {
+            makeMira(swatchNames[i]);
+            startPoint = startPoint + mm * 4;
+        }
+    })();
+}
+
+/**
+ *
+ * @param {Swatch} swatch
+ */
+function makeMira(swatch) {
+    var miraGroup = doc.groupItems.add();
+    var miraFon = miraGroup.pathItems.add();
+    var pointsForFon = [[473.4189, 243.7412],
+        [464.9141, 243.7412],
+        [464.9141, 252.2451],
+        [473.4189, 252.2451]];
+    miraFon.setEntirePath(pointsForFon);
+    miraFon.closed = true;
+    miraFon.stroked = false;
+    miraFon.filled = true;
+    miraFon.fillColor = regColorWhite;
+
+    for (var i = 0; i < pointsForMira.length; i++) {
+        var miraPath = miraGroup.pathItems.add();
+        miraPath.setEntirePath(pointsForMira [i]);
+        miraPath.closed = true;
+        miraPath.stroked = false;
+        miraPath.filled = true;
+        miraPath.fillColor = swatch.color;
     }
 
-    MiraGroup.position = [start, docHeight - mm];
+    miraGroup.position = [startPoint, docHeight - mm];
 }

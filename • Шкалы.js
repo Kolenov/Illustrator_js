@@ -5,9 +5,9 @@ var docHeight = doc.height;
 var docWidth = doc.width;
 var mm = 2.834645;
 var swatchNames = doc.swatches;
-// first strip start point
+// first strip startPoint point
 var startStripPoint = doc.width / 2 - mm * 8;
-// first name start point
+// first name startPoint point
 var startSwatchNamePoint = doc.width / 2 + mm * 4;
 var addCmykMessage = "Add CMYK Swatches";
 var addScaleMessage = "Add Scales";
@@ -23,7 +23,6 @@ doc.selection = null;
 var regColorWhite = new SpotColor();
 regColorWhite.spot = doc.spots[lastSpot];
 regColorWhite.tint = 0;
-
 
 if (isMakeSwatch()) {
     var checkConfirm = confirm(addCmykMessage);
@@ -44,11 +43,11 @@ if (checkConfirm === true) {
     } else {
         doc.activeLayer = doc.layers[scaleLayerName];
     }
-
+    // skip 2 swatches - NoColor and Registration
     for (i = 2; i < swatchNames.length; ++i) {
         var boxGroup = doc.activeLayer.groupItems.add();
         var newPath = boxGroup.pathItems;
-        makeStrip(swatchNames[i].color);
+        makeStrip(swatchNames[i]);
         startStripPoint -= mm * 3;
     }
 }
@@ -62,7 +61,7 @@ if (checkConfirm === true) {
     } else {
         doc.activeLayer = doc.layers[scaleLayerName];
     }
-
+    // skip 2 swatches - NoColor and Registration
     for (i = 2; i < swatchNames.length; i++) {
         makeSwatchName.call(swatchNames[i]);
     }
@@ -125,7 +124,7 @@ function makeBox(tint) {
     box.strokeWidth = 0.1;
     box.filled = true;
 
-    var boxFillColor = this;
+    var boxFillColor = this.color;
     boxFillColor.tint = 100;
     box.strokeColor = boxFillColor;
     boxFillColor.tint = tint;

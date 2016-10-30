@@ -24,9 +24,9 @@ if (selection.length == 1) {
      Заказчик | <Наименование работы> | Untitled-3 | (13.07.2006 - 15:10) | 307.100 x 230.000
      */
     var blocksList = textSourceContent.split(/\s*\|\s*/g);
-// разбиваем на блоки строчку 307.100 x 230.000
+    // разбиваем на блоки строчку 307.100 x 230.000
     if (blocksList.length > 4) {
-        var widthHight = blocksList[4].split(/\s\x\s/);
+        var widthHight = blocksList[4].split(/\s*[x]\s*/g);
     }
 
     // TODO Check if patterns are exist

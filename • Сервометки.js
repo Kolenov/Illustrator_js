@@ -27,14 +27,14 @@ var servoGroup = doc.activeLayer.groupItems.add();
 (function () {
     var counter = 0;
     for (var i = 2; i < swatchNames.length; ++i) {
-        // add start code marker for sensotech system
+        // add startPoint code marker for sensotech system
         if (i == 2) {
             makeBox(4 * mm, -2.5 * mm, 2.5 * mm, 4 * mm, swatchNames[2].color);
             makeBox(4 * mm, -2.5 * mm - 10 * mm, 5 * mm, 4 * mm, swatchNames[2].color);
             makeBox(4 * mm, -2.5 * mm - 10 * mm - 5 * mm, 2.5 * mm, 4 * mm, swatchNames[2].color);
             continue;
         } else {
-            // add base mark after start code and after every 2 colors
+            // add base mark after startPoint code and after every 2 colors
             if (isEven(counter)) {
                 makeMarker(swatchNames[2].color);
                 startPoint -= 13 * mm;
